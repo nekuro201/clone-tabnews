@@ -1,9 +1,16 @@
 import database from "infra/database.js";
 
 async function status(request, response) {
-  const result = await database.query("SELECT 1 + 1 as SUM;");
-  console.log(result.rows);
-  response.status(200).json({ status: "ok" });
+  const updatedAt = new Date().toISOString();
+
+  const databaseInfo = await database.getDatabaseStatus();
+
+  response.status(200).json({
+    updated_at: updatedAt,
+    postgres_version: databaseInfo.version,
+    postgres_max_connections: databaseInfo.max_connections,
+    postgres_connections: databaseInfo.num_connections,
+  });
 }
 
 export default status;
