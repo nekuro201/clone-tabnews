@@ -13,7 +13,6 @@ async function query(queryObject) {
 
   try {
     const result = await client.query(queryObject);
-    await client.end();
     return result;
   } catch (err) {
     console.log(err);
@@ -26,12 +25,9 @@ async function getDatabaseStatus() {
   const queryText = `
     SELECT
       current_setting('server_version') AS version,
-      current_setting('max_connections')::int AS max_connections,
-      (SELECT count(*)::int FROM pg_stat_activity) AS num_connections;
+      current_setting('max_connections')::int AS max_connections;
   `;
-
   const result = await query(queryText);
-
   return result.rows[0];
 }
 
